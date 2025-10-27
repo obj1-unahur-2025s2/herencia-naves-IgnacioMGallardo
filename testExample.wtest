@@ -1,0 +1,21 @@
+import example.*
+
+describe "Grupo de tests de las Naves" {
+  const naveBaliza = new Baliza(colorDeBaliza="rojo")
+
+  test "test 1" {
+    naveBaliza.acelerar(10000)
+    assert.equals(10000, naveBaliza.velocidad())
+  }
+  test "test 2" {
+    naveBaliza.irHaciaElSol()
+    naveBaliza.acercarseUnPocoAlSol()
+    assert.equals(10, naveBaliza.direccion())
+  }
+
+  test "Nave de Combate" {
+    const naveCombate = new Combate()
+    naveCombate.emitirMensaje("Hola como va")
+    assert.that(naveCombate.emitioMensaje("Hola como va"))
+  }
+}

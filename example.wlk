@@ -1,9 +1,11 @@
-import academiademagia-los-chads.magos.*
+
 class NaveEspacial{
   var velocidad = 0
   var direccion = 0
   var combustible = 0
 
+  method velocidad() = velocidad
+  method direccion() = direccion
   method acelerar(cuanto) {velocidad = (velocidad + cuanto).min(100000)}
   method desacelerar(cuanto) {velocidad = (velocidad - cuanto).max(100000)}
   method irHaciaElSol() {direccion = 10}
@@ -18,10 +20,18 @@ class NaveEspacial{
   }
   method cargarCombustible(unaCantidad) {combustible += unaCantidad}
   method combustible() = combustible
+  
+  method superAcelerar(cuanto) { //Esto es extra
+    if(!cuanto.between(0, 50000))
+      throw new Exception(message="El valor debe estar entre 0 y 50000")
+    else
+    self.acelerar(cuanto * 2)
+  }
+  //throw new Exception(message="Mensaje cualquiera") == self.error("Mensaje cualquiera")
 }
 
 class Baliza inherits NaveEspacial {
-  var colorDeBaliza = "verde"
+  var colorDeBaliza
 
   method colorDeBaliza() = colorDeBaliza
   method cambiarColorDeBaliza(colorNuevo) {colorDeBaliza = colorNuevo}
