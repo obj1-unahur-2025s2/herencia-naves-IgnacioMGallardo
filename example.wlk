@@ -20,6 +20,13 @@ class NaveEspacial{
   }
   method cargarCombustible(unaCantidad) {combustible += unaCantidad}
   method combustible() = combustible
+  method estaTranquila() = combustible >= 4000 && velocidad <= 12000
+  method escapar()
+  method avisar()
+  method recibirAmenaza() {
+    self.escapar()
+    self.avisar()
+  }
   
   method superAcelerar(cuanto) { //Esto es extra
     if(!cuanto.between(0, 50000))
@@ -40,6 +47,9 @@ class Baliza inherits NaveEspacial {
     super() 
     colorDeBaliza = "verde"
   }
+  override method estaTranquila() = super() && colorDeBaliza != "rojo"
+  override method escapar() {self.irHaciaElSol()}
+  override method avisar() {self.cambiarColorDeBaliza("rojo")}
 }
 
 class Pasajeros inherits NaveEspacial {
@@ -48,15 +58,20 @@ class Pasajeros inherits NaveEspacial {
   var cantBebida
 
   method cargarComida(unaCantidad) {cantComida += unaCantidad}
-  method descargarComida(unaCantidad) {cantComida = (cantComida - unaCantidad).max(0)}
+  method darComidaAPasajeros(unaCantidad) {cantComida = (cantComida - unaCantidad).max(0)}
   method cargarBebidas(unaCantidad) {cantBebida += unaCantidad}
-  method descargarBebidas(unaCantidad) {cantBebida = (cantBebida - unaCantidad).max(0)}
+  method darBebidasAPasajeros(unaCantidad) {cantBebida = (cantBebida - unaCantidad).max(0)}
 
   override method prepararViaje() {
     super()
     self.cargarComida(4 * cantPasajeros)
     self.cargarBebidas(6 * cantPasajeros)
     self.acercarseUnPocoAlSol()
+  }
+  override method escapar() {self.velocidad() * 2}
+  override method avisar() {
+    self.darComidaAPasajeros(1)
+    self.darBebidasAPasajeros(2)
   }
 }
 
@@ -84,15 +99,22 @@ class Combate inherits NaveEspacial {
     self.acelerar(15000)
     self.emitirMensaje("Saliendo en misión")
   }
+  override method estaTranquila() = super() && !self.misilesDesplegados()
+  override method escapar() {
+    self.acercarseUnPocoAlSol() 
+    self.acercarseUnPocoAlSol()
+  }
+  override method avisar() {self.emitirMensaje("Amenaza recibida")}
 }
 
 class Hospital inherits Pasajeros{
-  var quirofanosPreparados
+  var quirofanosPreparados = false
 
   method prepararQuirofanos(){quirofanosPreparados = true}
   method usarQuirofanos(){quirofanosPreparados = false}
   method hayQuirofanoPreparado() = quirofanosPreparados
+  override method estaTranquila() = super() && !self.hayQuirofanoPreparado()
 }
 class CombateSigiloso inherits Combate{
-
+  override method estaTranquila() = super() && !self.estaInvisible()
 }
