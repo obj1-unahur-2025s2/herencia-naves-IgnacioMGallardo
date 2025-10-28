@@ -23,10 +23,9 @@ class NaveEspacial{
   method estaTranquila() = combustible >= 4000 && velocidad <= 12000
   method escapar()
   method avisar()
-  method recibirAmenaza() {
-    self.escapar()
-    self.avisar()
-  }
+  method recibirAmenaza() {self.escapar() self.avisar()}
+  method estaDeRelajo() = self.estaTranquila() && self.tenerPocaVelocidad()
+  method tenerPocaVelocidad()
   
   method superAcelerar(cuanto) { //Esto es extra
     if(!cuanto.between(0, 50000))
@@ -114,7 +113,9 @@ class Hospital inherits Pasajeros{
   method usarQuirofanos(){quirofanosPreparados = false}
   method hayQuirofanoPreparado() = quirofanosPreparados
   override method estaTranquila() = super() && !self.hayQuirofanoPreparado()
+  override method recibirAmenaza() {super() self.prepararQuirofanos()}
 }
 class CombateSigiloso inherits Combate{
   override method estaTranquila() = super() && !self.estaInvisible()
+  override method recibirAmenaza() {super() self.desplegarMisilies() self.ponerseInvisible()}
 }
